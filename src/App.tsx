@@ -1,7 +1,9 @@
 import "./App.css";
 import { Counter } from "./ui/Counter.tsx";
+import { useState } from "react";
 
 function App() {
+    const [trigger, setTrigger] = useState(false);
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
             <Counter start={43} end={17435} duration={2000} size="xs" color="blue" />
@@ -46,6 +48,18 @@ function App() {
                 suffix=" EUR" // Add suffix for clarification
                 easing="easeInOut" // Use easeInOut easing
             />
+
+            <Counter
+                start={0}
+                end={1000}
+                duration={2000}
+                size="lg"
+                color="green"
+                trigger={trigger}
+                prefix="$"
+            />
+            <button onClick={() => setTrigger(true)}>Start Animation</button>
+            <button onClick={() => setTrigger(false)}>Reset Animation</button>
         </div>
     );
 }

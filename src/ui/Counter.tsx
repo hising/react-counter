@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import clsx from "clsx";
 import styles from "./Counter.module.css";
@@ -14,11 +14,12 @@ interface CounterProps {
     duration?: number;
     size?: CounterSize;
     color?: CounterColor;
-    locale?: string; // Locale for i18n formatting
-    decimals?: number; // Number of decimal places
-    prefix?: string; // Text before the number
-    suffix?: string; // Text after the number
-    easing?: EasingType | ((t: number) => number); // Named or custom easing function
+    locale?: string;
+    decimals?: number;
+    prefix?: string;
+    suffix?: string;
+    easing?: EasingType | ((t: number) => number);
+    trigger?: boolean; // Animation trigger prop
 }
 
 const predefinedEasings: Record<EasingType, (t: number) => number> = {
@@ -38,21 +39,35 @@ export const Counter: React.FC<CounterProps> = ({
     decimals = 0,
     prefix = "",
     suffix = "",
-    easing = "linear", // Default to linear easing
+    easing = "linear",
+    trigger = true, // Default to auto-start
 }) => {
     const [countingFinished, setCountingFinished] = useState(false);
     const [showAnimation, setShowAnimation] = useState(false);
+    const [animationTrigger, setAnimationTrigger] = useState(trigger);
 
-    // Resolve easing function
+    useEffect(() => {
+        if (trigger) {
+            setAnimationTrigger(true);
+        } else {
+            setAnimationTrigger(false);
+            setCountingFinished(false);
+            setShowAnimation(false);
+        }
+    }, [trigger]);
+
     const easingFunction = typeof easing === "string" ? predefinedEasings[easing] : easing;
 
     const { number } = useSpring({
         from: { number: start },
-        to: { number: end },
+        to: { number: animationTrigger ? end : start },
         config: { duration, easing: easingFunction },
+        reset: !trigger,
         onRest: () => {
-            setCountingFinished(true);
-            setShowAnimation(true);
+            if (animationTrigger) {
+                setCountingFinished(true);
+                setShowAnimation(true);
+            }
         },
     });
 
