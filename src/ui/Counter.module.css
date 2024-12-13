@@ -1,0 +1,73 @@
+.counterContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+.staticNumber {
+    font-size: 4rem;
+    font-weight: bold;
+    color: transparent; /* Makes text color visible only through gradient */
+    background-clip: text;
+    -webkit-background-clip: text;
+    position: absolute;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+.gradientOutline {
+    background: linear-gradient(45deg, #b62079, #110ae0); /* Gradient colors */
+    -webkit-text-stroke: 2px transparent; /* Transparent stroke initially */
+    color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
+
+.number {
+    font-size: 4rem;
+    font-weight: bold;
+    transition: all 0.6s ease-in-out;
+}
+
+.dull {
+    color: #aaa; /* Dull color during counting */
+}
+
+.animatedNumber {
+    font-size: 4rem;
+    font-weight: bold;
+    color: transparent;
+    position: absolute;
+    z-index: 2;
+    background: linear-gradient(45deg, #b62079, #110ae0); /* Same gradient */
+    -webkit-background-clip: text;
+    -webkit-text-stroke: 2px;
+    -webkit-text-fill-color: transparent;
+    animation: zoomOut 0.8s ease-in-out forwards;
+}
+
+@keyframes zoomOut {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+        -webkit-text-stroke: 2px #b62079; /* Gradient outline remains vibrant */
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
