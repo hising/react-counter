@@ -30,6 +30,7 @@ function App() {
                 size="xl"
                 color="gray"
                 locale={"sv-se"}
+                easing={(t) => t * t}
             />
             <Counter start={0} end={8.7} decimals={1} duration={1000} size="md" color="blue" />
 
@@ -43,6 +44,7 @@ function App() {
                 decimals={0}
                 prefix="€" // Add Euro prefix
                 suffix=" EUR" // Add suffix for clarification
+                easing="easeInOut" // Use easeInOut easing
             />
         </div>
     );

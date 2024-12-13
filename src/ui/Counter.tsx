@@ -6,6 +6,8 @@ import styles from "./Counter.module.css";
 type CounterSize = "xs" | "sm" | "md" | "lg" | "xl";
 type CounterColor = "blue" | "green" | "red" | "orange" | "gray";
 
+type EasingType = "linear" | "easeIn" | "easeOut" | "easeInOut";
+
 interface CounterProps {
     start: number;
     end: number;
@@ -16,7 +18,15 @@ interface CounterProps {
     decimals?: number; // Number of decimal places
     prefix?: string; // Text before the number
     suffix?: string; // Text after the number
+    easing?: EasingType | ((t: number) => number); // Named or custom easing function
 }
+
+const predefinedEasings: Record<EasingType, (t: number) => number> = {
+    linear: (t) => t,
+    easeIn: (t) => t * t,
+    easeOut: (t) => 1 - Math.pow(1 - t, 2),
+    easeInOut: (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
+};
 
 export const Counter: React.FC<CounterProps> = ({
     start,
@@ -24,25 +34,28 @@ export const Counter: React.FC<CounterProps> = ({
     duration = 2000,
     size = "md",
     color = "blue",
-    locale = "en", // Default to English locale
-    decimals = 0, // Default to no decimals
+    locale = "en",
+    decimals = 0,
     prefix = "",
     suffix = "",
+    easing = "linear", // Default to linear easing
 }) => {
     const [countingFinished, setCountingFinished] = useState(false);
     const [showAnimation, setShowAnimation] = useState(false);
 
+    // Resolve easing function
+    const easingFunction = typeof easing === "string" ? predefinedEasings[easing] : easing;
+
     const { number } = useSpring({
         from: { number: start },
         to: { number: end },
-        config: { duration },
+        config: { duration, easing: easingFunction },
         onRest: () => {
             setCountingFinished(true);
             setShowAnimation(true);
         },
     });
 
-    // Format numbers based on locale with decimal support
     const formatNumber = (value: number) => {
         return new Intl.NumberFormat(locale, {
             minimumFractionDigits: decimals,
@@ -52,14 +65,13 @@ export const Counter: React.FC<CounterProps> = ({
 
     return (
         <div className={styles.counterContainer}>
-            {/* Final static number with vibrant color */}
             {countingFinished && (
                 <span
                     className={clsx(
                         styles.number,
                         styles.staticNumber,
-                        styles[size], // Apply size class
-                        styles[color] // Apply color class
+                        styles[size],
+                        styles[color]
                     )}
                 >
                     {prefix}
@@ -67,15 +79,13 @@ export const Counter: React.FC<CounterProps> = ({
                     {suffix}
                 </span>
             )}
-
-            {/* Animated zoom-out effect */}
             {showAnimation && (
                 <span
                     className={clsx(
                         styles.number,
                         styles.animatedNumber,
-                        styles[size], // Apply size class
-                        styles[color] // Apply color class
+                        styles[size],
+                        styles[color]
                     )}
                 >
                     {prefix}
@@ -83,16 +93,8 @@ export const Counter: React.FC<CounterProps> = ({
                     {suffix}
                 </span>
             )}
-
-            {/* Counting animation (dull color) */}
             {!countingFinished && (
-                <animated.span
-                    className={clsx(
-                        styles.number,
-                        styles.dull,
-                        styles[size] // Apply size class
-                    )}
-                >
+                <animated.span className={clsx(styles.number, styles.dull, styles[size])}>
                     {number.to((n) => `${prefix}${formatNumber(n)}${suffix}`)}
                 </animated.span>
             )}
