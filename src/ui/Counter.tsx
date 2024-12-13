@@ -12,6 +12,7 @@ interface CounterProps {
     duration?: number;
     size?: CounterSize;
     color?: CounterColor;
+    locale?: string; // Add locale prop for i18n formatting
 }
 
 export const Counter: React.FC<CounterProps> = ({
@@ -20,6 +21,7 @@ export const Counter: React.FC<CounterProps> = ({
     duration = 2000,
     size = "md",
     color = "blue",
+    locale = "en", // Default to English locale
 }) => {
     const [countingFinished, setCountingFinished] = useState(false);
     const [showAnimation, setShowAnimation] = useState(false);
@@ -34,6 +36,14 @@ export const Counter: React.FC<CounterProps> = ({
         },
     });
 
+    // Format numbers based on locale
+    const formatNumber = (value: number) => {
+        return new Intl.NumberFormat(locale, {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        }).format(value);
+    };
+
     return (
         <div className={styles.counterContainer}>
             {/* Final static number with vibrant color */}
@@ -42,10 +52,10 @@ export const Counter: React.FC<CounterProps> = ({
                     className={clsx(
                         styles.staticNumber,
                         styles[size], // Apply size class
-                        styles[color] // Apply color class only after counting finishes
+                        styles[color] // Apply color class
                     )}
                 >
-                    {end}
+                    {formatNumber(end)}
                 </span>
             )}
 
@@ -55,10 +65,10 @@ export const Counter: React.FC<CounterProps> = ({
                     className={clsx(
                         styles.animatedNumber,
                         styles[size], // Apply size class
-                        styles[color] // Apply color class for zoom-out animation
+                        styles[color] // Apply color class
                     )}
                 >
-                    {end}
+                    {formatNumber(end)}
                 </span>
             )}
 
@@ -67,11 +77,12 @@ export const Counter: React.FC<CounterProps> = ({
                 <animated.span
                     className={clsx(
                         styles.number,
-                        styles.dull, // Always dull during counting
+                        styles.dull,
                         styles[size] // Apply size class
                     )}
                 >
-                    {number.to((n) => n.toFixed(0))}
+                    {/* Explicitly cast the interpolated value to a string */}
+                    {number.to((n) => formatNumber(n)) as unknown as string}
                 </animated.span>
             )}
         </div>
