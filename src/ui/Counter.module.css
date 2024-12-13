@@ -7,17 +7,26 @@
 }
 
 /* Base number styles */
-.staticNumber,
-.number,
-.animatedNumber {
-    font-weight: 300;
+.number {
+    font-weight: 400; /* Consistent weight */
+    font-family: Arial, sans-serif;
+    line-height: 1.2;
     position: absolute;
-    text-align: center;
+
+    /* Force anti-aliasing for consistent rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Dull color for counting animation */
+/* Static number (final vibrant color) */
+.staticNumber {
+    opacity: 0; /* Prevent flicker */
+    animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+/* Counting animation dull color */
 .dull {
-    color: #aaa;
+    color: #aaa; /* Dull color for counting */
 }
 
 /* Sizes */
@@ -37,45 +46,40 @@
     font-size: 3rem;
 }
 
-/* Themes - vibrant gradient */
-.blue,
-.animatedNumber.blue {
+/* Vibrant themes */
+.blue {
     background: linear-gradient(45deg, #2196f3, #21cbf3);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 2px #2196f3;
+    -webkit-text-stroke: 1px #2196f3; /* Reduced stroke thickness */
 }
 
-.green,
-.animatedNumber.green {
+.green {
     background: linear-gradient(45deg, #4caf50, #81c784);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 2px #4caf50;
+    -webkit-text-stroke: 1px #4caf50;
 }
 
-.red,
-.animatedNumber.red {
+.red {
     background: linear-gradient(45deg, #f44336, #e57373);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 2px #f44336;
+    -webkit-text-stroke: 1px #f44336;
 }
 
-.orange,
-.animatedNumber.orange {
+.orange {
     background: linear-gradient(45deg, #ff9800, #ffb74d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 2px #ff9800;
+    -webkit-text-stroke: 1px #ff9800;
 }
 
-.gray,
-.animatedNumber.gray {
+.gray {
     background: linear-gradient(45deg, #9e9e9e, #cfcfcf);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 2px #9e9e9e;
+    -webkit-text-stroke: 1px #9e9e9e;
 }
 
 /* Zoom-out animation */
@@ -91,16 +95,10 @@
     100% {
         transform: scale(2);
         opacity: 0;
-        -webkit-text-stroke-width: 1px;
     }
 }
 
 /* Fade-in for static number */
-.staticNumber {
-    opacity: 0;
-    animation: fadeIn 0.4s ease-in-out forwards;
-}
-
 @keyframes fadeIn {
     0% {
         opacity: 0;

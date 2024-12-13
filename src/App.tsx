@@ -23,6 +23,14 @@ function App() {
                 color="red"
                 locale={"sv-se"}
             />
+            <Counter
+                start={1}
+                end={1723453}
+                duration={300}
+                size="xl"
+                color="gray"
+                locale={"sv-se"}
+            />
         </div>
     );
 }

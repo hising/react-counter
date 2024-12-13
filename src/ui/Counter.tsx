@@ -12,7 +12,7 @@ interface CounterProps {
     duration?: number;
     size?: CounterSize;
     color?: CounterColor;
-    locale?: string; // Add locale prop for i18n formatting
+    locale?: string; // Locale for i18n formatting
 }
 
 export const Counter: React.FC<CounterProps> = ({
@@ -36,11 +36,11 @@ export const Counter: React.FC<CounterProps> = ({
         },
     });
 
-    // Format numbers based on locale
+    // Format numbers based on locale with no decimals
     const formatNumber = (value: number) => {
         return new Intl.NumberFormat(locale, {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            minimumFractionDigits: 0, // No decimals
+            maximumFractionDigits: 0, // No decimals
         }).format(value);
     };
 
@@ -50,6 +50,7 @@ export const Counter: React.FC<CounterProps> = ({
             {countingFinished && (
                 <span
                     className={clsx(
+                        styles.number, // Use consistent base number style
                         styles.staticNumber,
                         styles[size], // Apply size class
                         styles[color] // Apply color class
@@ -63,6 +64,7 @@ export const Counter: React.FC<CounterProps> = ({
             {showAnimation && (
                 <span
                     className={clsx(
+                        styles.number, // Use consistent base number style
                         styles.animatedNumber,
                         styles[size], // Apply size class
                         styles[color] // Apply color class
@@ -76,12 +78,11 @@ export const Counter: React.FC<CounterProps> = ({
             {!countingFinished && (
                 <animated.span
                     className={clsx(
-                        styles.number,
+                        styles.number, // Use consistent base number style
                         styles.dull,
                         styles[size] // Apply size class
                     )}
                 >
-                    {/* Explicitly cast the interpolated value to a string */}
                     {number.to((n) => formatNumber(n)) as unknown as string}
                 </animated.span>
             )}
