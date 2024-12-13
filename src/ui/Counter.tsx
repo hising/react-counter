@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import clsx from "clsx";
 import styles from "./Counter.module.css";
@@ -19,7 +19,9 @@ interface CounterProps {
     prefix?: string;
     suffix?: string;
     easing?: EasingType | ((t: number) => number);
-    trigger?: boolean; // Animation trigger prop
+    trigger?: boolean;
+    step?: number; // Incremental step size
+    randomStep?: boolean; // Add randomness to steps
 }
 
 const predefinedEasings: Record<EasingType, (t: number) => number> = {
@@ -40,34 +42,30 @@ export const Counter: React.FC<CounterProps> = ({
     prefix = "",
     suffix = "",
     easing = "linear",
-    trigger = true, // Default to auto-start
+    trigger = true,
+    step,
+    randomStep = false,
 }) => {
     const [countingFinished, setCountingFinished] = useState(false);
     const [showAnimation, setShowAnimation] = useState(false);
-    const [animationTrigger, setAnimationTrigger] = useState(trigger);
-
-    useEffect(() => {
-        if (trigger) {
-            setAnimationTrigger(true);
-        } else {
-            setAnimationTrigger(false);
-            setCountingFinished(false);
-            setShowAnimation(false);
-        }
-    }, [trigger]);
 
     const easingFunction = typeof easing === "string" ? predefinedEasings[easing] : easing;
 
+    const calculateStep = (value: number) => {
+        if (!step) return value; // Smooth animation
+        const increment = step || 1;
+        const randomFactor = randomStep ? Math.random() * 0.5 + 0.75 : 1; // Add randomness
+        return Math.round(value / increment) * increment * randomFactor;
+    };
+
     const { number } = useSpring({
         from: { number: start },
-        to: { number: animationTrigger ? end : start },
+        to: { number: end },
         config: { duration, easing: easingFunction },
         reset: !trigger,
         onRest: () => {
-            if (animationTrigger) {
-                setCountingFinished(true);
-                setShowAnimation(true);
-            }
+            setCountingFinished(true);
+            setShowAnimation(true);
         },
     });
 
@@ -110,7 +108,7 @@ export const Counter: React.FC<CounterProps> = ({
             )}
             {!countingFinished && (
                 <animated.span className={clsx(styles.number, styles.dull, styles[size])}>
-                    {number.to((n) => `${prefix}${formatNumber(n)}${suffix}`)}
+                    {number.to((n) => `${prefix}${formatNumber(calculateStep(n))}${suffix}`)}
                 </animated.span>
             )}
         </div>

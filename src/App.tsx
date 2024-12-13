@@ -60,6 +60,25 @@ function App() {
             />
             <button onClick={() => setTrigger(true)}>Start Animation</button>
             <button onClick={() => setTrigger(false)}>Reset Animation</button>
+            <Counter
+                start={0}
+                end={1000}
+                duration={2000}
+                size="lg"
+                color="green"
+                step={10} // Increments by 10
+                suffix=" km"
+            />
+            <Counter
+                start={100}
+                end={10000}
+                duration={5000}
+                size="md"
+                color="red"
+                step={100} // Increments by 100
+                randomStep={true} // Add random variance to steps
+                prefix="$"
+            />
         </div>
     );
 }
