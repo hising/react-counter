@@ -14,6 +14,8 @@ interface CounterProps {
     color?: CounterColor;
     locale?: string; // Locale for i18n formatting
     decimals?: number; // Number of decimal places
+    prefix?: string; // Text before the number
+    suffix?: string; // Text after the number
 }
 
 export const Counter: React.FC<CounterProps> = ({
@@ -24,6 +26,8 @@ export const Counter: React.FC<CounterProps> = ({
     color = "blue",
     locale = "en", // Default to English locale
     decimals = 0, // Default to no decimals
+    prefix = "",
+    suffix = "",
 }) => {
     const [countingFinished, setCountingFinished] = useState(false);
     const [showAnimation, setShowAnimation] = useState(false);
@@ -58,7 +62,9 @@ export const Counter: React.FC<CounterProps> = ({
                         styles[color] // Apply color class
                     )}
                 >
+                    {prefix}
                     {formatNumber(end)}
+                    {suffix}
                 </span>
             )}
 
@@ -72,7 +78,9 @@ export const Counter: React.FC<CounterProps> = ({
                         styles[color] // Apply color class
                     )}
                 >
+                    {prefix}
                     {formatNumber(end)}
+                    {suffix}
                 </span>
             )}
 
@@ -85,7 +93,7 @@ export const Counter: React.FC<CounterProps> = ({
                         styles[size] // Apply size class
                     )}
                 >
-                    {number.to((n) => formatNumber(n)) as unknown as string}
+                    {number.to((n) => `${prefix}${formatNumber(n)}${suffix}`)}
                 </animated.span>
             )}
         </div>

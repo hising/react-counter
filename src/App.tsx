@@ -32,6 +32,18 @@ function App() {
                 locale={"sv-se"}
             />
             <Counter start={0} end={8.7} decimals={1} duration={1000} size="md" color="blue" />
+
+            <Counter
+                start={50000.5}
+                end={100000.75}
+                duration={2000}
+                size="md"
+                color="red"
+                locale="de"
+                decimals={0}
+                prefix="€" // Add Euro prefix
+                suffix=" EUR" // Add suffix for clarification
+            />
         </div>
     );
 }
