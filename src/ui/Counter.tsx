@@ -13,6 +13,7 @@ interface CounterProps {
     size?: CounterSize;
     color?: CounterColor;
     locale?: string; // Locale for i18n formatting
+    decimals?: number; // Number of decimal places
 }
 
 export const Counter: React.FC<CounterProps> = ({
@@ -22,6 +23,7 @@ export const Counter: React.FC<CounterProps> = ({
     size = "md",
     color = "blue",
     locale = "en", // Default to English locale
+    decimals = 0, // Default to no decimals
 }) => {
     const [countingFinished, setCountingFinished] = useState(false);
     const [showAnimation, setShowAnimation] = useState(false);
@@ -36,11 +38,11 @@ export const Counter: React.FC<CounterProps> = ({
         },
     });
 
-    // Format numbers based on locale with no decimals
+    // Format numbers based on locale with decimal support
     const formatNumber = (value: number) => {
         return new Intl.NumberFormat(locale, {
-            minimumFractionDigits: 0, // No decimals
-            maximumFractionDigits: 0, // No decimals
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
         }).format(value);
     };
 
@@ -50,7 +52,7 @@ export const Counter: React.FC<CounterProps> = ({
             {countingFinished && (
                 <span
                     className={clsx(
-                        styles.number, // Use consistent base number style
+                        styles.number,
                         styles.staticNumber,
                         styles[size], // Apply size class
                         styles[color] // Apply color class
@@ -64,7 +66,7 @@ export const Counter: React.FC<CounterProps> = ({
             {showAnimation && (
                 <span
                     className={clsx(
-                        styles.number, // Use consistent base number style
+                        styles.number,
                         styles.animatedNumber,
                         styles[size], // Apply size class
                         styles[color] // Apply color class
@@ -78,7 +80,7 @@ export const Counter: React.FC<CounterProps> = ({
             {!countingFinished && (
                 <animated.span
                     className={clsx(
-                        styles.number, // Use consistent base number style
+                        styles.number,
                         styles.dull,
                         styles[size] // Apply size class
                     )}

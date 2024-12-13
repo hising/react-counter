@@ -31,6 +31,7 @@ function App() {
                 color="gray"
                 locale={"sv-se"}
             />
+            <Counter start={0} end={8.7} decimals={1} duration={1000} size="md" color="blue" />
         </div>
     );
 }
